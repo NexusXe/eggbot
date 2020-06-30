@@ -4,7 +4,7 @@ from owotext import OwO
 uwu = OwO()
 
 
-def getAuth(wanted):
+def getAuth(wanted): # using this instead of dotenv due to the fact it was Not Having a Good Time
     file = open('auth').readlines()
     for line in file:
         if line.startswith(wanted):
