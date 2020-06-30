@@ -1,4 +1,3 @@
-# bot.py
 import os, discord, sys
 from owotext import OwO
 
