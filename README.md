@@ -1,6 +1,5 @@
 # eggbot
 A simple Python bot for Discord, using discord.py for interfacing.
-[![Run on Repl.it](https://repl.it/badge/github/TheUnkn0wnN00b/eggbot)](https://repl.it/github/TheUnkn0wnN00b/eggbot)
 
 
 # Usage
