@@ -5,10 +5,10 @@ def getAuth(wanted): # using this instead of dotenv due to the fact it was Not H
     file = open('auth').readlines()
     for line in file:
         if line.startswith(wanted):
-            print(line)
             line = str([line][0])
-            line = line.replace('TOKEN ', '')
-            return line
+            line = line.replace(wanted + ' ', '')
+            line = line.replace('/n', '')
+            return str(line)
 
 
 TOKEN = getAuth('TOKEN')
@@ -16,6 +16,7 @@ print(TOKEN)
 
 
 defaultChannelID = '637690113631059979'
+print(defaultChannelID)
 
 channelID = input('Channel ID >>')
 
@@ -37,8 +38,8 @@ while True:
     POSTedJSON =  json.dumps ( {"content":message} )
     r = requests.post(baseURL, headers = headers, data = POSTedJSON)
     message = input('Enter new message. Reply "command" to preform a command. >>')
-    if message == 'command'
-    if message == 'changechannel':
+    if message == 'command':
+      if message == 'changechannel':
         channelID = input('New Channel ID >>')
         message = input('New Message >>')
         if channelID == 'a':

@@ -1,4 +1,0 @@
-asyncio
-owotext
-discord.py
-dotenv

@@ -8,16 +8,16 @@ def getAuth(wanted): # using this instead of dotenv due to the fact it was Not H
     file = open('auth').readlines()
     for line in file:
         if line.startswith(wanted):
-            print(line)
             line = str([line][0])
-            line = line.replace('TOKEN ', '')
-            return line
+            line = line.replace(wanted + ' ', '')
+            line = line.replace('/n', '')
+            return str(line)
 
 
 TOKEN = getAuth('TOKEN')
 print(TOKEN)
 
-
+defaultChannelID = '637690113631059979'
 def getHelp(message):
     if message.content == '~help':
         return ("This bot is still under development. Please be patient, but feel free to interact with it "
