@@ -1,2 +1,4 @@
 auth
 eggbot/auth
+.env
+eggbot/.env

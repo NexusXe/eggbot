@@ -1,2 +1,2 @@
 language = "python3"
-run = "cd eggbot; python3 speech.py"
+run = "python3 eggbot/owobot.py"

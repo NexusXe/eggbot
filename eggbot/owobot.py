@@ -1,24 +1,46 @@
-import os, discord, sys
-from owotext import OwO
+def owobot():
+  import discord, ctypes, ctypes.util, logging
+  from owotext import OwO
+  opusname = ctypes.util.find_library('opus')
 
-uwu = OwO()
+  discord.opus.load_opus(opusname)
+  if not discord.opus.is_loaded():
+      raise RuntimeError('Opus failed to load')
+      logging.warning('Opus failed to load.')
+
+  uwu = OwO()
+
+  global bound_user
+  bound_user = ''
+
+  global voiceChannelID
+
+  client = discord.Client()
+
+  def getAuth(wanted): # using this instead of dotenv due to the fact it was Not Having a Good Time
+      file = open('eggbot/auth').readlines()
+      for line in file:
+          if line.startswith(wanted):
+              line = str([line][0])
+              line = line.replace(wanted + ' ', '')
+              line = line.replace('/n', '')
+              logging.debug('Token read as ' + str(line))
+              print(str(line))
+              return str(line)
 
 
-def getAuth(wanted): # using this instead of dotenv due to the fact it was Not Having a Good Time
-    file = open('auth').readlines()
-    for line in file:
-        if line.startswith(wanted):
-            line = str([line][0])
-            line = line.replace(wanted + ' ', '')
-            line = line.replace('/n', '')
-            return str(line)
+
+  TOKEN = getAuth('TOKEN')
+
+  defaultChannelID = '637690113631059979'
+
+  defaultVoiceChannelID = ''
+
+  voiceChannelID = ''
 
 
-TOKEN = getAuth('TOKEN')
-print(TOKEN)
-
-defaultChannelID = '637690113631059979'
-def getHelp(message):
+  def getHelp(message):
+    logging.debug('Help raised.')
     if message.content == '~help':
         return ("This bot is still under development. Please be patient, but feel free to interact with it "
                 "however you want. A full list of commands is coming soon, but here's what is implemented so"
@@ -50,47 +72,77 @@ def getHelp(message):
             return 'Syntax error.'
 
 
-client = discord.Client()
+
+  def owoify(message, add=' '):
+    skinned = message.content.replace('~owo' + add, '')
+    return uwu.whatsthis(skinned)
 
 
-# noinspection PyCompatibility
-@client.event
-async def on_message(message):
+  async def on_ready():
+    print('Bot is online.')
+
+
+  # noinspection PyCompatibility
+  @client.event
+  async def on_message(message):
+    global bound_user
+    global voiceChannelID
     if message.author == client.user:
         return
-    if message.content.startswith('~owo ') and not message.content.startswith('~owox '):  # makes sure that message
-        # does not have arguments for other command in it; redundant but fixes some weird issues
-        skinned = (message.content.replace('~owo ', ''))
-        response = uwu.whatsthis(skinned)
-        await message.channel.send(response)
-    if message.content.startswith('~owox ') and not message.content.startswith('~owo '):  # same as above
-        skinned = message.content.replace('~owox ', '')
-        response = uwu.whatsthis(skinned)
-        await message.channel.send(response)
+    if message.content.startswith('~owo '):
+        await message.channel.send(owoify(message))
+    elif message.content.startswith('~owox '):
+        await message.channel.send(owoify(message, 'x '))
         await message.delete()
-    if message.content.startswith('~help'):
+    elif message.content.startswith('~help'):
         response = getHelp(message)
         await message.channel.send(response)
     elif message.content == '~egg':
         response = ':egg:'
         await message.channel.send(response)
-    elif message.content == '~dointro':
-        if message.author == '328380599935172611':
-            response = ("Hello! I'm your local neighborhood :egg:! Feel free to interact with me! :smiley: Currently"
-                        " I don't do much, but I'm learing! A list of my commands can be found by typing `~help`")
-            await message.channel.send(response)
     elif message.content == '~info':
-        response = ("This is a prototype bot created by the user `Nexus#2396`. Its purpose is simply as a means of"
-                    " testing. However, in the more long-term, there are plans to turn this into a bot that produces"
-                    " AI-generated responses to input messages. That is far from where it is now. Any feature"
-                    " requests can be directed to DMs.")
+        response = ("This is a prototype bot created by the user `Nexus#2396`. I really just mess with it from time to time, and I use it for TTS (coming soon!)")
         await message.channel.send(response)
     elif message.content == '~template':
         response = "Template"
         await message.channel.send(response)
+    elif message.content == '~bind':
+      bound_user = str(message.author.id)
+      print('Bound to ' + str(message.author))
+      await message.channel.send('Bound to ' + str(message.author) + '\n' + 'You can now use TTS commands.')
+    elif message.content == '~unbind':
+      print('Bound user output is ' + bound_user)
+      if str(message.author.id) == bound_user:
+        bound_user = ''
+        await message.channel.send('Unbound.')
+        print('Unbound.')
+      else:
+        await message.channel.send("You aren't bound!")
+    elif message.content == '~forceunbind' and str(message.author.id) == '328380599935172611':
+      bound_user = ''
+      await message.channel.send('oopsie woopsie! looks like i did a bit of a fucky wucky and coomed on the TTS bindings! im vewwy sowwy. also blame nexus lmoa')
+    elif message.content.startswith('~setvc'):
+      voiceChannelID = message.content.replace('~setvc ', '')
+      try:
+        voiceChannelID = str(int(voiceChannelID))
+        print(voiceChannelID)
+        await message.channel.send(voiceChannelID)
+      except:
+        print(voiceChannelID)
+        await message.channel.send('Invalid Channel ID!')
+    elif message.content == '~join':
+      print('The currently seen voice channel is ' + voiceChannelID)
+      await message.channel.send('Unfinished command.')
+      if bound_user != '':
+        print('Bound to ' + bound_user + ', they can use the TTS bot until someone else binds.')
+      else:
+        bound_user = str(message.author.id)
+      print('Current voice channel ID is '+ voiceChannelID)
+      await client.join_voice_channel(voiceChannelID)
+      await message.channel.send('Joined VC.')
     else:
-        print('dont care didnt ask')
-        print('Ignored message content: ' + message.content)
-
-
-client.run(TOKEN)
+        print(message.content)
+  client.run(TOKEN)
+  
+if __name__ == '__main__':
+  owobot()

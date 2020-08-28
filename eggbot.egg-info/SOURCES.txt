@@ -1,0 +1,11 @@
+README.md
+setup.py
+eggbot/auth
+eggbot/launcher.py
+eggbot/owobot.py
+eggbot/speech.py
+eggbot.egg-info/PKG-INFO
+eggbot.egg-info/SOURCES.txt
+eggbot.egg-info/dependency_links.txt
+eggbot.egg-info/requires.txt
+eggbot.egg-info/top_level.txt
