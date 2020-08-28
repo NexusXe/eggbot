@@ -1,5 +1,5 @@
 def owobot():
-  import discord, ctypes, ctypes.util, logging
+  import discord, ctypes, ctypes.util, logging, sys, os
   from owotext import OwO
   opusname = ctypes.util.find_library('opus')
 
