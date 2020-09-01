@@ -8,6 +8,7 @@ authors = ["repl.it user <replituser@example.com>"]
 python = "^3.8"
 discord = "^1.0.1"
 owotext = "^1.0.3"
+psutil = "^5.7.2"
 
 [tool.poetry.dev-dependencies]
 

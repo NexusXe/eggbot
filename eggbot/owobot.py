@@ -1,3 +1,4 @@
+# TODO: The indentation in this entire script is FUCKED
 def owobot():
   import discord, ctypes, ctypes.util, logging, sys, os
   from owotext import OwO
